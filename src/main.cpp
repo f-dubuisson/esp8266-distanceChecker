@@ -8,7 +8,16 @@ ESP8266WebServer server(httpPort);
 Sensor sensor(triggerPin, echoPin);
 
 void handleRoot() {
-  String result = String(sensor.getDistance());
+  int readCount = (server.args() == 1 ? server.arg("c").toInt() : 1);
+  int sumDistance = 0;
+  for (int i=0; i<readCount; i++) {
+    int distance = sensor.getDistance();
+    Serial.println(distance);
+    sumDistance += distance;
+  }
+
+  String result = String(sumDistance / readCount);
+  Serial.println("Distance: " + result + "cm in " + readCount + " reads");
   server.send(200, "text/plain", result);
 }
 

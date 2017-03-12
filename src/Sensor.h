@@ -2,7 +2,7 @@
 class Sensor {
 public:
   Sensor(int triggerPin, int echoPin);
-  float getDistance();
+  int getDistance();
 
 private:
   int triggerPin;

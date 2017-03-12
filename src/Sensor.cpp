@@ -6,15 +6,16 @@ Sensor::Sensor(int triggerPin, int echoPin) {
   this->echoPin = echoPin;
 
   pinMode(triggerPin, OUTPUT);
-  digitalWrite(triggerPin, LOW);
   pinMode(echoPin, INPUT);
 }
 
-float Sensor::getDistance() {
+int Sensor::getDistance() {
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
   digitalWrite(triggerPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(triggerPin, LOW);
-  long lecture_echo = pulseIn(echoPin, HIGH);
-  
-  return ((double)lecture_echo) / 58;
+  int lecture_echo = pulseIn(echoPin, HIGH, 20000);
+
+  return lecture_echo / 58;
 }
