@@ -9,7 +9,7 @@ NewPing sonar(triggerPin, echoPin, maxDistance);
 
 void handleRoot() {
   int readCount = (server.args() == 1 ? server.arg("c").toInt() : 1);
-  String result = String(sonar.ping_median(readCount));
+  String result = String(sonar.convert_cm(sonar.ping_median(readCount)));
 
   Serial.println("Distance: " + result + "cm in " + readCount + " reads");
   server.send(200, "text/plain", result);
