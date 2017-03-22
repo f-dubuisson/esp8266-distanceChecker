@@ -1,15 +1,21 @@
 #include <ESP8266WebServer.h>
 #include <NewPing.h>
 #include "wifi.h"
+#include "RunningAverage.h"
 #include "config.h"
 
 
 ESP8266WebServer server(httpPort);
 NewPing sonar(triggerPin, echoPin, maxDistance);
+RunningAverage averageValue(10);
 
 void handleRoot() {
   int readCount = (server.args() == 1 ? server.arg("c").toInt() : 1);
-  String result = String(sonar.convert_cm(sonar.ping_median(readCount)));
+  int distance = sonar.convert_cm(sonar.ping_median(readCount));
+  Serial.println("Initial distance: " + String(distance) + "cm");
+  averageValue.addValue(distance);
+
+  String result = String(averageValue.getAverage());
 
   Serial.println("Distance: " + result + "cm in " + readCount + " reads");
   server.send(200, "text/plain", result);
