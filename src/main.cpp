@@ -8,14 +8,12 @@
 ESP8266WebServer server(httpPort);
 NewPing sonar(triggerPin, echoPin, maxDistance);
 RollingAverage rollingAverage(10);
+unsigned long lastValueRead = 0;
 
 void handleRoot() {
-  int readCount = (server.args() == 1 ? server.arg("c").toInt() : 1);
-  int value = sonar.convert_cm(sonar.ping_median(readCount));
-  rollingAverage.add(value);
   String result = String(rollingAverage.getAverage());
 
-  Serial.println("Distance: " + result + "cm in " + readCount + " reads");
+  Serial.println("Distance: " + result + "cm");
   server.send(200, "text/plain", result);
 }
 
@@ -35,8 +33,16 @@ void setup() {
   Serial.println("HTTP server started");
 }
 
-/** Fonction loop() **/
 void loop() {
+  if (millis() - lastValueRead > 1000) {
+    // Get last value
+    int value = sonar.convert_cm(sonar.ping_median());
+    rollingAverage.add(value);
+    lastValueRead = millis();
+  }
+
+  // Handle client requests
   server.handleClient();
+
   delay(100);
 }
