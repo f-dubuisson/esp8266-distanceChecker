@@ -11,6 +11,7 @@ public:
 
 private:
   int* values;
+  int start;
   int size;
   int count;
 };

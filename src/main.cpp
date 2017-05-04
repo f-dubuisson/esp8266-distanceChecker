@@ -39,6 +39,12 @@ void loop() {
     int value = sonar.convert_cm(sonar.ping_median());
     rollingAverage.add(value);
     lastValueRead = millis();
+
+    String text = "New value: ";
+    text += value;
+    text += "; average is now: ";
+    text += rollingAverage.getAverage();
+    Serial.println(text);
   }
 
   // Handle client requests

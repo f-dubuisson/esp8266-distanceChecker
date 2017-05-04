@@ -1,10 +1,10 @@
 #include <stdlib.h>
-#include <cstring>
 #include "RollingAverage.h"
 
 RollingAverage::RollingAverage(int _size) {
   values = new int[_size];
   size = _size;
+  start = 0;
 }
 
 RollingAverage::~RollingAverage() {
@@ -12,13 +12,13 @@ RollingAverage::~RollingAverage() {
 }
 
 void RollingAverage::add(int value) {
-  if (count == size) {
-    // Shift all elements left
-    count --;
-    memmove(values, values + sizeof(int), count * sizeof(int));
+  if (count < size) {
+    values[count] = value;
+    count ++;
+  } else {
+    start = (start+1) % size;
+    values[(start+count) % size] = value;
   }
-  values[count] = value;
-  count ++;
 }
 
 int RollingAverage::getAverage() {
