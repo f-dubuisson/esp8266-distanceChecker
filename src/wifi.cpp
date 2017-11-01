@@ -7,6 +7,7 @@
 void setupWifi(const char* ssid, const char* password) {
   Serial.begin(9600);
   Serial.println("Connecting...");
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.println("");
 
